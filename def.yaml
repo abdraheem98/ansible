@@ -1,0 +1,9 @@
+---
+mysql_root_password: "rootpassword"
+mysql_databases:
+  - name: mydatabase
+    encoding: utf8
+mysql_users:
+  - name: myuser
+    password: userpassword
+    priv: "mydatabase.*:ALL"

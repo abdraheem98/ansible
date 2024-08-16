@@ -1,0 +1,13 @@
+---
+- name: Manage packages on all hosts
+  hosts: all
+  become: yes  # Use 'become' to escalate privileges if necessary
+  tasks:
+    - name: Install multiple packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - vim
+        - git
+        - curl

@@ -1,0 +1,35 @@
+---
+- name: Conditional Tasks Based on System Facts
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Install `nginx` on Ubuntu systems
+      apt:
+        name: nginx
+        state: present
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install `httpd` on RedHat-based systems
+      yum:
+        name: httpd
+        state: present
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Configure swap file if available memory is less than 2GB
+      block:
+        - name: Create a 1GB swap file
+          command: dd if=/dev/zero of=/swapfile bs=1M count=1024
+
+        - name: Set up swap area
+          command: mkswap /swapfile
+
+        - name: Enable swap
+          command: swapon /swapfile
+
+        - name: Add swap entry to fstab
+          lineinfile:
+            path: /etc/fstab
+            line: "/swapfile none swap sw 0 0"
+      when: ansible_facts['memtotal_mb'] < 2048

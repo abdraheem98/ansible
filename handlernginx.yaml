@@ -1,0 +1,25 @@
+---
+- name: Modify Nginx Configuration and Reload Service
+  hosts: all
+  become: yes  
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+
+    - name: Modify Nginx worker_processes
+      lineinfile:
+        path: /etc/nginx/nginx.conf
+        regexp: '^worker_processes'
+        line: 'worker_processes auto;'
+        backup: yes
+      notify:
+        - reload nginx
+
+  handlers:
+    - name: reload nginx
+      service:
+        name: nginx
+        state: reloaded

@@ -1,0 +1,13 @@
+# playbook.yml
+- name: Example Playbook
+  hosts: all
+  vars_files:
+    - secrets.yml
+  tasks:
+    - name: Display DB Password
+      debug:
+        msg: "The DB password is {{ db_password }}"
+
+    - name: Display API Key
+      debug:
+        msg: "The API key is {{ api_key }}"
